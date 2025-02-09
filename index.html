@@ -54,12 +54,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative; /* Added for pseudo-element */
     }
-    /* Default h1 style; overridden in each scene as needed */
+    /* White box behind the text */
+    .text-box::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8); /* adjust opacity as needed */
+      z-index: 0;
+    }
     .text-box h1 {
       font-size: 18px;
       line-height: 1.4;
       margin: 0;
+      position: relative; /* Ensure text is above the white box */
+      z-index: 1;
     }
 
     .buttons {
@@ -167,7 +180,7 @@
 
     /* Scene 3 adjustments */
     #scene3 .text-box h1 {
-      transform: translateY(-60px);  /* Raise text a little bit (more negative) */
+      transform: translateY(-60px);  /* Raise text a little bit */
     }
     #scene3 .buttons {
       margin-top: -20px;  /* Raise the buttons upward */
@@ -175,7 +188,7 @@
 
     /* Scene 4 adjustments */
     #scene4 .text-box h1 {
-      transform: translateY(-60px);  /* Set text at the ideal, dead-center height */
+      transform: translateY(-60px);  /* Center text inside textbox */
     }
   </style>
 </head>
