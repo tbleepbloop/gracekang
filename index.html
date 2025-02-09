@@ -55,7 +55,7 @@
       align-items: center;
       justify-content: center;
     }
-    /* Shift the text further upward */
+    /* Default text shift (will be overridden per scene) */
     .text-box h1 {
       font-size: 18px;
       line-height: 1.4;
@@ -140,6 +140,41 @@
     @keyframes fadeOut {
       from { opacity: 1; }
       to { opacity: 0; }
+    }
+
+    /* Custom adjustments per scene */
+
+    /* Scene 1 adjustments */
+    #scene1 .text-box {
+      margin-bottom: 20px; /* Buttons closer to textbox */
+    }
+    #scene1 .text-box h1 {
+      transform: translateY(-100px); /* More negative to center text */
+    }
+
+    /* Scene 2 adjustments */
+    #scene2 .text-box h1 {
+      transform: translateY(-100px); /* Shift text further upward */
+    }
+    #scene2 .pokeballs {
+      margin-top: 10px; /* Bring pokeballs closer to the textbox */
+    }
+    #scene2 .pokeball-container img {
+      width: 200px; /* Make pokeballs larger */
+      height: 200px;
+    }
+
+    /* Scene 3 adjustments */
+    #scene3 .text-box {
+      margin-bottom: 20px; /* Buttons closer to textbox */
+    }
+    #scene3 .text-box h1 {
+      transform: translateY(-40px); /* Lower the text inside the textbox a bit */
+    }
+
+    /* Scene 4 adjustments */
+    #scene4 .text-box h1 {
+      transform: translateY(-60px); /* Center text inside textbox, lower a bit */
     }
   </style>
 </head>
