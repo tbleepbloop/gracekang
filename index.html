@@ -54,25 +54,17 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative; /* Added for pseudo-element */
+      position: relative;
     }
-    /* White box behind the text */
-    .text-box::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.8); /* adjust opacity as needed */
-      z-index: 0;
-    }
+    /* Instead of a full-box pseudo-element, we now style the h1 directly */
     .text-box h1 {
       font-size: 18px;
       line-height: 1.4;
       margin: 0;
-      position: relative; /* Ensure text is above the white box */
-      z-index: 1;
+      /* White background behind just the text */
+      background-color: rgba(255, 255, 255, 0.8);
+      display: inline-block;
+      padding: 10px 20px;
     }
 
     .buttons {
@@ -101,7 +93,6 @@
     .pokeballs {
       display: flex;
       gap: 50px;
-      /* Default margin; overridden in Scene 2 */
       margin-top: 30px;
     }
     /* Wrap each pokéball image in a container so we can use pseudo-elements */
