@@ -61,7 +61,7 @@
       font-size: 18px;
       line-height: 1.4;
       margin: 0;
-      transform: translateY(-100px); /* Adjusted to move text further up */
+      transform: translateY(-80px);
     }
 
     .buttons {
@@ -92,18 +92,23 @@
       gap: 50px;
       margin-top: 30px;
     }
-    .pokeball {
+    /* Wrap each pokeball image in a container */
+    .pokeball-container {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .pokeball-container img {
       width: 150px;
       height: 150px;
-      cursor: pointer;
       transition: transform 0.3s;
-      position: relative;
+      display: block;
     }
-    .pokeball:hover {
+    .pokeball-container:hover img {
       transform: scale(1.1);
     }
-    /* Use CSS pseudo-element to display hover text */
-    .pokeball:hover::after {
+    /* Use a pseudo-element on the container for hover text */
+    .pokeball-container:hover::after {
       content: attr(data-hover);
       position: absolute;
       top: -20px;
@@ -158,15 +163,21 @@
     </div>
     <div class="pokeballs">
       <!-- Left = grass, Middle = fire, Right = water -->
-      <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="grass" data-hover="Grass Type">
-      <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="fire" data-hover="Fire Type">
-      <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="water" data-hover="Water Type">
+      <div class="pokeball-container" data-type="grass" data-hover="Grass Type">
+        <img src="grace pokemon/pokeball closed.png" alt="Grass Pokeball">
+      </div>
+      <div class="pokeball-container" data-type="fire" data-hover="Fire Type">
+        <img src="grace pokemon/pokeball closed.png" alt="Fire Pokeball">
+      </div>
+      <div class="pokeball-container" data-type="water" data-hover="Water Type">
+        <img src="grace pokemon/pokeball closed.png" alt="Water Pokeball">
+      </div>
     </div>
   </div>
 
   <!-- Scene 3: Confirmation -->
   <div id="scene3" class="scene">
-    <!-- Display the selected Pokémon image -->
+    <!-- Display the selected Pokémon image (using same approach as Scene 4) -->
     <img id="selectedPokemon" src="" style="width:200px; margin-bottom:20px;">
     <div class="text-box">
       <h1>Do you choose this POKEMON?</h1>
@@ -179,7 +190,7 @@
 
   <!-- Scene 4: Final Match Display (Final Message & Image) -->
   <div id="scene4" class="scene">
-    <img id="matchImage" class="match-image">
+    <img id="matchImage" class="match-image" src="">
     <div class="text-box">
       <h1 id="matchText"></h1>
     </div>
@@ -190,7 +201,14 @@
 
   <script>
     let selectedType = '';
-    let selectedBall = null; // Reference to the clicked pokéball
+    let selectedContainer = null; // Reference to the container that was clicked
+
+    // Dictionary for Scene 3 images
+    const pokemonImages = {
+      grass: { image: 'grass.png' },
+      fire: { image: 'fire.png' },
+      water: { image: 'water.png' }
+    };
 
     // Scene 1 Interactions
     document.getElementById('noBtn').addEventListener('click', function() {
@@ -203,20 +221,21 @@
     });
 
     // Scene 2 Interactions
-    const pokeballs = document.querySelectorAll('.pokeball');
-    pokeballs.forEach(ball => {
-      ball.addEventListener('click', async function() {
+    const containers = document.querySelectorAll('.pokeball-container');
+    containers.forEach(container => {
+      container.addEventListener('click', async function() {
         selectedType = this.dataset.type; // "grass", "fire", or "water"
-        selectedBall = this;
+        selectedContainer = this;
+        const img = this.querySelector('img');
         // Animate the pokéball opening sequence
-        this.src = `grace pokemon/pokeball mid opening.png`;
+        img.src = "grace pokemon/pokeball mid opening.png";
         await new Promise(resolve => setTimeout(resolve, 500));
-        this.src = `grace pokemon/pokeball open.png`;
+        img.src = "grace pokemon/pokeball open.png";
         await new Promise(resolve => setTimeout(resolve, 500));
-        // Now display the correct Pokémon image (grass.png, fire.png, or water.png)
-        this.src = `grace pokemon/${selectedType}.png`;
+        // Now display the correct Pokémon image using the same approach as Scene 4
+        img.src = "grace pokemon/" + pokemonImages[selectedType].image;
         // Also set the confirmation image in Scene 3
-        document.getElementById('selectedPokemon').src = `grace pokemon/${selectedType}.png`;
+        document.getElementById('selectedPokemon').src = "grace pokemon/" + pokemonImages[selectedType].image;
         // Transition to Scene 3
         document.getElementById('scene2').classList.remove('active');
         document.getElementById('scene3').classList.add('active');
@@ -241,16 +260,16 @@
       };
       document.getElementById('scene3').classList.remove('active');
       document.getElementById('scene4').classList.add('active');
-      document.getElementById('matchImage').src = `grace pokemon/${matchInfo[selectedType].image}`;
+      document.getElementById('matchImage').src = "grace pokemon/" + matchInfo[selectedType].image;
       document.getElementById('matchText').textContent = matchInfo[selectedType].final;
     });
     document.getElementById('noConfirmBtn').addEventListener('click', function() {
-      // Reset the clicked pokéball to its closed image
-      if(selectedBall) {
-        selectedBall.src = "grace pokemon/pokeball closed.png";
+      // Reset the selected pokéball's image to closed
+      if(selectedContainer) {
+        selectedContainer.querySelector('img').src = "grace pokemon/pokeball closed.png";
       }
       // Clear the confirmation image
-      document.getElementById('selectedPokemon').src = '';
+      document.getElementById('selectedPokemon').src = "";
       // Transition back to Scene 2
       document.getElementById('scene3').classList.remove('active');
       document.getElementById('scene2').classList.add('active');
@@ -259,7 +278,7 @@
     // Remove the overlay after the fade-out animation completes
     const overlay = document.getElementById('overlay');
     overlay.addEventListener('animationend', function() {
-      overlay.style.display = 'none';
+      overlay.style.display = "none";
     });
   </script>
 </body>
