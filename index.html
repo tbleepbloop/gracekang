@@ -7,7 +7,7 @@
     /* Import the custom font with URL-encoded spaces */
     @font-face {
       font-family: 'PokemonGB';
-      src: url('grace%20pokemon/Pokemon%20GB.ttf') format('truetype');
+      src: url('grace pokemon/Pokemon GB.ttf') format('truetype');
     }
 
     /* Reset margins, paddings and ensure full-screen display */
@@ -50,7 +50,7 @@
       display: flex;
     }
     .textbox {
-      background: url('grace%20pokemon/pokemon%20textbox.png') no-repeat center/contain;
+      background: url('grace pokemon/pokemon textbox.png') no-repeat center/contain;
       width: 600px;
       height: 200px;
       display: flex;
@@ -90,7 +90,7 @@
 
     /* ===== SCENE 2 ===== */
     #scene2 {
-      background: url('grace%20pokemon/pink%20background.jpg') no-repeat center/cover;
+      background: url('grace pokemon/pink background.jpg') no-repeat center/cover;
       display: flex;
       flex-direction: column;
     }
@@ -128,7 +128,7 @@
     }
     .choice-prompt {
       margin-top: 30px;
-      background: url('grace%20pokemon/pokemon%20textbox.png') no-repeat center/contain;
+      background: url('grace pokemon/pokemon textbox.png') no-repeat center/contain;
       width: 500px;
       height: 150px;
       display: flex;
@@ -162,7 +162,7 @@
 
     /* ===== SCENE 3 ===== */
     #scene3 {
-      background: url('grace%20pokemon/pink%20background.jpg') no-repeat center/cover;
+      background: url('grace pokemon/pink background.jpg') no-repeat center/cover;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -194,15 +194,15 @@
     <div class="pokeball-container">
       <div class="pokeball" data-type="grass" id="ballGrass">
         <span class="ball-label">GRASS TYPE</span>
-        <img src="grace%20pokemon/pokeball%20closed.png" alt="Pokeball">
+        <img src="grace pokemon/pokeball closed.png" alt="Pokeball">
       </div>
       <div class="pokeball" data-type="fire" id="ballFire">
         <span class="ball-label">FIRE TYPE</span>
-        <img src="grace%20pokemon/pokeball%20closed.png" alt="Pokeball">
+        <img src="grace pokemon/pokeball closed.png" alt="Pokeball">
       </div>
       <div class="pokeball" data-type="water" id="ballWater">
         <span class="ball-label">WATER TYPE</span>
-        <img src="grace%20pokemon/pokeball%20closed.png" alt="Pokeball">
+        <img src="grace pokemon/pokeball closed.png" alt="Pokeball">
       </div>
     </div>
     <div id="choicePrompt" class="choice-prompt" style="display:none;">
@@ -255,15 +255,15 @@
           selectedBall = ball;
           const img = ball.querySelector("img");
           setTimeout(function() {
-            img.src = "grace%20pokemon/pokeball%20mid%20opening.png";
+            img.src = "grace pokemon/pokeball mid opening.png";
           }, 200);
           setTimeout(function() {
-            img.src = "grace%20pokemon/pokeball%20open.png";
+            img.src = "grace pokemon/pokeball open.png";
           }, 600);
           setTimeout(function() {
-            document.getElementById("ballGrass").querySelector("img").src = "grace%20pokemon/grass%20type.png";
-            document.getElementById("ballFire").querySelector("img").src = "grace%20pokemon/fire%20type.png";
-            document.getElementById("ballWater").querySelector("img").src = "grace%20pokemon/water%20type.png";
+            document.getElementById("ballGrass").querySelector("img").src = "grace pokemon/grass type.png";
+            document.getElementById("ballFire").querySelector("img").src = "grace pokemon/fire type.png";
+            document.getElementById("ballWater").querySelector("img").src = "grace pokemon/water type.png";
             choicePrompt.style.display = "flex";
           }, 1200);
         });
@@ -273,7 +273,7 @@
         choicePrompt.style.display = "none";
         selectedBall = null;
         pokeballs.forEach(function(ball) {
-          ball.querySelector("img").src = "grace%20pokemon/pokeball%20closed.png";
+          ball.querySelector("img").src = "grace pokemon/pokeball closed.png";
         });
       });
 
@@ -282,13 +282,13 @@
         let matchImageSrc = "";
         let finalMessage = "";
         if (ballType === "grass") {
-          matchImageSrc = "grace%20pokemon/grass%20match.png";
+          matchImageSrc = "grace pokemon/grass match.png";
           finalMessage = "Grace, I will never LEAF your side! Will you be my VALENTINE?";
         } else if (ballType === "fire") {
-          matchImageSrc = "grace%20pokemon/fire%20match.png";
+          matchImageSrc = "grace pokemon/fire match.png";
           finalMessage = "Grace, you set my heart on FIRE! Will you be my VALENTINE?";
         } else if (ballType === "water") {
-          matchImageSrc = "grace%20pokemon/water%20match.png";
+          matchImageSrc = "grace pokemon/water match.png";
           finalMessage = "Grace, WATER you waiting for, will you be my VALENTINE?";
         }
         selectedBall.querySelector("img").src = matchImageSrc;
