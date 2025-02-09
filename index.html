@@ -1,255 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Valentine's Adventure</title>
-    <style>
-        @font-face {
-            font-family: 'Pokemon';
-            src: url('grace pokemon/Pokemon GB.ttf') format('truetype');
-        }
+  <meta charset="UTF-8">
+  <title>Valentine's Adventure</title>
+  <style>
+    @font-face {
+      font-family: 'Pokemon';
+      src: url('grace pokemon/Pokemon GB.ttf') format('truetype');
+    }
 
-        body {
-            margin: 0;
-            height: 100vh;
-            overflow: hidden;
-            font-family: 'Pokemon', sans-serif;
-            transition: background-image 1s;
-        }
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Pokemon', sans-serif;
+      transition: background-image 1s;
+    }
 
-        .scene {
-            display: none;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
+    /* ------------------------------------------------------------------
+       SCENE TRANSITIONS (FADE IN / FADE OUT)
+       ------------------------------------------------------------------ */
+    .scene {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 1s ease-in-out;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    .scene.active {
+      opacity: 1;
+      visibility: visible;
+    }
 
-        .active {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+    #scene1 {
+      background-color: #FFB6C1;
+    }
 
-        #scene1 {
-            background-color: #FFB6C1;
-        }
+    .text-box {
+      background-image: url('grace pokemon/pokemon textbox.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: 600px;
+      height: 200px;
+      text-align: center;
+      padding: 70px 50px;
+      margin-bottom: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        .text-box {
-            background-image: url('grace pokemon/pokemon textbox.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            width: 600px;
-            height: 200px;
-            text-align: center;
-            padding: 70px 50px;
-            margin-bottom: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    /* Shift text upward within the textbox */
+    .text-box h1 {
+      font-size: 18px;
+      line-height: 1.4;
+      margin: 0;
+      transform: translateY(-20px);
+    }
 
-        .text-box h1 {
-            font-size: 18px;
-            line-height: 1.4;
-            margin: 0;
-        }
+    .buttons {
+      display: flex;
+      gap: 50px;
+    }
 
-        .buttons {
-            display: flex;
-            gap: 50px;
-        }
+    .bubble {
+      background-color: #8B0000;
+      color: white;
+      padding: 20px 40px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
 
-        .bubble {
-            background-color: #8B0000;
-            color: white;
-            padding: 20px 40px;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
+    .bubble:hover {
+      transform: scale(1.1);
+    }
 
-        .bubble:hover {
-            transform: scale(1.1);
-        }
+    .fly-away {
+      animation: flyOff 1s forwards;
+    }
 
-        .fly-away {
-            animation: flyOff 1s forwards;
-        }
+    @keyframes flyOff {
+      0% { transform: translateY(0) rotate(0); }
+      100% { transform: translateY(-1000px) rotate(360deg); opacity: 0; }
+    }
 
-        @keyframes flyOff {
-            0% { transform: translateY(0) rotate(0); }
-            100% { transform: translateY(-1000px) rotate(360deg); opacity: 0; }
-        }
+    .pokeballs {
+      display: flex;
+      gap: 50px;
+      margin-top: 30px;
+    }
 
-        .pokeballs {
-            display: flex;
-            gap: 50px;
-            margin-top: 30px;
-        }
+    .pokeball {
+      width: 150px;
+      height: 150px;
+      cursor: pointer;
+      transition: transform 0.3s;
+      position: relative;
+    }
 
-        .pokeball {
-            width: 150px;
-            height: 150px;
-            cursor: pointer;
-            transition: transform 0.3s;
-            position: relative;
-        }
+    .pokeball:hover {
+      transform: scale(1.1);
+    }
 
-        .pokeball:hover {
-            transform: scale(1.1);
-        }
+    .type-text {
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 14px;
+    }
 
-        .type-text {
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            white-space: nowrap;
-            font-size: 14px;
-        }
+    .final-text {
+      font-size: 20px;
+      text-align: center;
+      max-width: 700px;
+      padding: 80px 60px;
+    }
 
-        .final-text {
-            font-size: 20px;
-            text-align: center;
-            max-width: 700px;
-            padding: 80px 60px;
-        }
-
-        .match-image {
-            width: 300px;
-            margin-bottom: 30px;
-        }
-    </style>
+    .match-image {
+      width: 300px;
+      margin-bottom: 30px;
+    }
+  </style>
 </head>
 <body>
-    <!-- Scene 1: Initial Screen -->
-    <div id="scene1" class="scene active">
-        <div class="text-box">
-            <h1>Toan is in trouble!<br>Release a POKEMON and rescue him!</h1>
-        </div>
-        <div class="buttons">
-            <div class="bubble" id="okBtn">Okay</div>
-            <div class="bubble" id="noBtn">No</div>
-        </div>
+  <!-- Scene 1: Initial Screen -->
+  <div id="scene1" class="scene active">
+    <div class="text-box">
+      <h1>Toan is in trouble!<br>Release a POKEMON and rescue him!</h1>
     </div>
-
-    <!-- Scene 2: Pokeball Selection -->
-    <div id="scene2" class="scene">
-        <div class="text-box">
-            <h1>Toan is in trouble!<br>Release a POKEMON and rescue him!</h1>
-        </div>
-        <div class="pokeballs">
-            <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="grass">
-            <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="fire">
-            <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="water">
-        </div>
+    <div class="buttons">
+      <div class="bubble" id="okBtn">Okay</div>
+      <div class="bubble" id="noBtn">No</div>
     </div>
+  </div>
 
-    <!-- Scene 3: Confirmation -->
-    <div id="scene3" class="scene">
-        <div class="text-box">
-            <h1>Do you choose this POKEMON?</h1>
-        </div>
-        <div class="buttons">
-            <div class="bubble" id="yesBtn">Yes</div>
-            <div class="bubble" id="noConfirmBtn">No</div>
-        </div>
+  <!-- Scene 2: Pokeball Selection -->
+  <div id="scene2" class="scene">
+    <div class="text-box">
+      <h1>Toan is in trouble!<br>Release a POKEMON and rescue him!</h1>
     </div>
-
-    <!-- Scene 4: Match Display -->
-    <div id="scene4" class="scene">
-        <img id="matchImage" class="match-image">
-        <div class="text-box">
-            <h1 id="matchText"></h1>
-        </div>
+    <div class="pokeballs">
+      <!-- The data-type values below are in left-to-right order:
+           left = grass, middle = fire, right = water -->
+      <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="grass">
+      <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="fire">
+      <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="water">
     </div>
+  </div>
 
-    <!-- Scene 5: Final Message -->
-    <div id="scene5" class="scene">
-        <div class="text-box final-text">
-            <h1 id="finalMessage"></h1>
-        </div>
+  <!-- Scene 3: Confirmation -->
+  <div id="scene3" class="scene">
+    <div class="text-box">
+      <h1>Do you choose this POKEMON?</h1>
     </div>
+    <div class="buttons">
+      <div class="bubble" id="yesBtn">Yes</div>
+      <div class="bubble" id="noConfirmBtn">No</div>
+    </div>
+  </div>
 
-    <script>
-        let selectedType = '';
+  <!-- Scene 4: Final Match Display (Final Message & Image) -->
+  <div id="scene4" class="scene">
+    <img id="matchImage" class="match-image">
+    <div class="text-box">
+      <h1 id="matchText"></h1>
+    </div>
+  </div>
+
+  <script>
+    let selectedType = '';
+
+    // (Optional) Reinforce the correct type based on order.
+    const pokeballs = document.querySelectorAll('.pokeball');
+    pokeballs.forEach((ball, index) => {
+      if (index === 0) {
+        ball.dataset.type = 'grass';
+      } else if (index === 1) {
+        ball.dataset.type = 'fire';
+      } else if (index === 2) {
+        ball.dataset.type = 'water';
+      }
+    });
+
+    // Scene 1 Interactions
+    document.getElementById('noBtn').addEventListener('click', function() {
+      this.classList.add('fly-away');
+    });
+
+    document.getElementById('okBtn').addEventListener('click', function() {
+      document.getElementById('scene1').classList.remove('active');
+      document.getElementById('scene2').classList.add('active');
+      document.body.style.backgroundImage = "url('grace pokemon/pink background.jpg')";
+    });
+
+    // Scene 2 Interactions
+    document.querySelectorAll('.pokeball').forEach(ball => {
+      ball.addEventListener('mouseover', function() {
+        const type = this.dataset.type;
+        const typeText = document.createElement('div');
+        typeText.className = 'type-text';
+        typeText.textContent = `${type.toUpperCase()} TYPE`;
+        this.appendChild(typeText);
+      });
+
+      ball.addEventListener('mouseout', function() {
+        const text = this.querySelector('.type-text');
+        if (text) text.remove();
+      });
+
+      ball.addEventListener('click', async function() {
+        selectedType = this.dataset.type;
+        // Play the opening animation sequence
+        this.src = `grace pokemon/pokeball mid opening.png`;
+        await new Promise(resolve => setTimeout(resolve, 500));
+        this.src = `grace pokemon/pokeball open.png`;
+        await new Promise(resolve => setTimeout(resolve, 500));
+        // Now show the corresponding type image
+        this.src = `grace pokemon/${selectedType} type.png`;
         
-        // Scene 1 Interactions
-        document.getElementById('noBtn').addEventListener('click', function() {
-            this.classList.add('fly-away');
-        });
+        document.getElementById('scene2').classList.remove('active');
+        document.getElementById('scene3').classList.add('active');
+      });
+    });
 
-        document.getElementById('okBtn').addEventListener('click', function() {
-            document.getElementById('scene1').classList.remove('active');
-            document.getElementById('scene2').classList.add('active');
-            document.body.style.backgroundImage = "url('grace pokemon/pink background.jpg')";
-        });
+    // Scene 3 Interactions (Final Confirmation)
+    document.getElementById('yesBtn').addEventListener('click', function() {
+      // Match info contains the final image and final message for each type.
+      const matchInfo = {
+        grass: {
+          image: 'grass match.png',
+          final: 'Grace, I will never LEAF your side! Will you be my VALENTINE?'
+        },
+        fire: {
+          image: 'fire match.png',
+          final: 'Grace, you set my heart on FIRE! Will you be my VALENTINE?'
+        },
+        water: {
+          image: 'water match.png',
+          final: 'Grace, WATER you waiting for, will you be my VALENTINE?'
+        }
+      };
 
-        // Scene 2 Interactions
-        document.querySelectorAll('.pokeball').forEach(ball => {
-            ball.addEventListener('mouseover', function() {
-                const type = this.dataset.type;
-                const typeText = document.createElement('div');
-                typeText.className = 'type-text';
-                typeText.textContent = `${type.toUpperCase()} TYPE`;
-                this.appendChild(typeText);
-            });
+      document.getElementById('scene3').classList.remove('active');
+      document.getElementById('scene4').classList.add('active');
+      // Display the final image and message immediately (no intermediate short text)
+      document.getElementById('matchImage').src = `grace pokemon/${matchInfo[selectedType].image}`;
+      document.getElementById('matchText').textContent = matchInfo[selectedType].final;
+    });
 
-            ball.addEventListener('mouseout', function() {
-                const text = this.querySelector('.type-text');
-                if (text) text.remove();
-            });
-
-            ball.addEventListener('click', async function() {
-                selectedType = this.dataset.type;
-                this.src = `grace pokemon/pokeball mid opening.png`;
-                await new Promise(resolve => setTimeout(resolve, 500));
-                this.src = `grace pokemon/pokeball open.png`;
-                await new Promise(resolve => setTimeout(resolve, 500));
-                this.src = `grace pokemon/${selectedType} type.png`;
-                
-                document.getElementById('scene2').classList.remove('active');
-                document.getElementById('scene3').classList.add('active');
-            });
-        });
-
-        // Scene 3 Interactions
-        document.getElementById('yesBtn').addEventListener('click', function() {
-            const matchInfo = {
-                grass: {
-                    image: 'grass match.png',
-                    text: 'You found a loyal companion!',
-                    final: 'Grace, I will never LEAF your side! Will you be my VALENTINE?'
-                },
-                fire: {
-                    image: 'fire match.png',
-                    text: 'You set my heart on FIRE!',
-                    final: 'Grace, you set my heart on FIRE! Will you be my VALENTINE?'
-                },
-                water: {
-                    image: 'water match.png',
-                    text: 'WATER you waiting for, Be mine!',
-                    final: 'Grace, WATER you waiting for, will you be my VALENTINE?'
-                }
-            };
-
-            document.getElementById('scene3').classList.remove('active');
-            document.getElementById('scene4').classList.add('active');
-            document.getElementById('matchImage').src = `grace pokemon/${matchInfo[selectedType].image}`;
-            document.getElementById('matchText').textContent = matchInfo[selectedType].text;
-            
-            setTimeout(() => {
-                document.getElementById('scene4').classList.remove('active');
-                document.getElementById('scene5').classList.add('active');
-                document.getElementById('finalMessage').textContent = matchInfo[selectedType].final;
-            }, 3000);
-        });
-
-        document.getElementById('noConfirmBtn').addEventListener('click', function() {
-            document.getElementById('scene3').classList.remove('active');
-            document.getElementById('scene2').classList.add('active');
-        });
-    </script>
+    document.getElementById('noConfirmBtn').addEventListener('click', function() {
+      document.getElementById('scene3').classList.remove('active');
+      document.getElementById('scene2').classList.add('active');
+    });
+  </script>
 </body>
 </html>
