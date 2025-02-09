@@ -176,7 +176,7 @@
 
   <!-- Scene 3: Confirmation -->
   <div id="scene3" class="scene">
-    <!-- Display the selected match image (same method as Scene 4) -->
+    <!-- Display the selected base image (grass.png, fire.png, or water.png) -->
     <img id="selectedPokemon" src="" style="width:200px; margin-bottom:20px;">
     <div class="text-box">
       <h1>Do you choose this POKEMON?</h1>
@@ -202,19 +202,26 @@
     let selectedType = '';
     let selectedContainer = null; // Reference to the container that was clicked
 
-    // Global dictionary for match images and messages (used in both Scene 3 and 4)
+    // Dictionary for base images (for Scene 3)
+    const baseImages = {
+      grass: "grass.png",
+      fire: "fire.png",
+      water: "water.png"
+    };
+
+    // Global dictionary for match images and final messages (for Scene 4)
     const matchInfo = {
       grass: {
-        image: 'grass match.png',
-        final: 'Grace, I will never LEAF your side! Will you be my VALENTINE?'
+        image: "grass match.png",
+        final: "Grace, I will never LEAF your side! Will you be my VALENTINE?"
       },
       fire: {
-        image: 'fire match.png',
-        final: 'Grace, you set my heart on FIRE! Will you be my VALENTINE?'
+        image: "fire match.png",
+        final: "Grace, you set my heart on FIRE! Will you be my VALENTINE?"
       },
       water: {
-        image: 'water match.png',
-        final: 'Grace, WATER you waiting for, will you be my VALENTINE?'
+        image: "water match.png",
+        final: "Grace, WATER you waiting for, will you be my VALENTINE?"
       }
     };
 
@@ -240,10 +247,10 @@
         await new Promise(resolve => setTimeout(resolve, 500));
         img.src = "grace pokemon/pokeball open.png";
         await new Promise(resolve => setTimeout(resolve, 500));
-        // Now display the correct match image (using the same method as Scene 4)
-        img.src = "grace pokemon/" + matchInfo[selectedType].image;
-        // Also set the confirmation image in Scene 3 to be the same
-        document.getElementById('selectedPokemon').src = "grace pokemon/" + matchInfo[selectedType].image;
+        // Now display the correct base image (for Scene 3)
+        img.src = "grace pokemon/" + baseImages[selectedType];
+        // Also set the confirmation image in Scene 3 to be the base image
+        document.getElementById('selectedPokemon').src = "grace pokemon/" + baseImages[selectedType];
         // Transition to Scene 3
         document.getElementById('scene2').classList.remove('active');
         document.getElementById('scene3').classList.add('active');
@@ -260,7 +267,7 @@
     });
     document.getElementById('noConfirmBtn').addEventListener('click', function() {
       // Reset the selected pokéball's image to the closed image
-      if(selectedContainer) {
+      if (selectedContainer) {
         selectedContainer.querySelector('img').src = "grace pokemon/pokeball closed.png";
       }
       // Clear the confirmation image
