@@ -52,7 +52,7 @@
       justify-content: center;
       position: relative;
     }
-    /* Style the h1 so its white background fits only the text */
+    /* Style the h1 so its white background fits just the text */
     .text-box h1 {
       font-size: 18px;
       line-height: 1.4;
@@ -65,8 +65,7 @@
     .buttons {
       display: flex;
       gap: 50px;
-      /* Default margin-top; overridden per scene */
-      margin-top: 0;
+      margin-top: 0; /* default; scene-specific override below */
     }
     .bubble {
       background-color: #8B0000;
@@ -159,7 +158,7 @@
     }
     /* Scene 3 adjustments */
     #scene3 .text-box h1 {
-      transform: translateY(-50px); /* Raise text a little bit (less negative) */
+      transform: translateY(-50px); /* Raise text a bit (less negative) */
     }
     #scene3 .buttons {
       margin-top: -40px; /* Raise the buttons closer to center */
@@ -168,12 +167,34 @@
     #scene4 .text-box h1 {
       transform: translateY(-60px); /* Center text inside textbox */
     }
-    /* Center container in Scene 4 for match image and GIFs */
+    /* New container for Scene 4: centerContainer will position the match image and GIFs */
     #centerContainer {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
+      position: relative;
+      width: 600px;
+      margin: 0 auto;
+      height: auto;
+    }
+    /* The main match image is centered and on top */
+    #matchImage {
+      display: block;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+    /* Side GIFs are absolutely positioned so they can overlap */
+    .sideGif {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 5;
+    }
+    #leftGif {
+      left: 0;
+      transform: translate(-50%, -50%);
+    }
+    #rightGif {
+      right: 0;
+      transform: translate(50%, -50%);
     }
   </style>
 </head>
@@ -220,11 +241,11 @@
   </div>
   <!-- Scene 4: Final Match Display (Final Message, Image, and GIFs) -->
   <div id="scene4" class="scene">
-    <!-- New container for centering match image and GIFs horizontally -->
+    <!-- New container for centering match image and side GIFs -->
     <div id="centerContainer">
-      <div id="leftGifContainer"></div>
       <img id="matchImage" class="match-image" src="">
-      <div id="rightGifContainer"></div>
+      <img id="leftGif" class="sideGif" src="">
+      <img id="rightGif" class="sideGif" src="">
     </div>
     <div class="text-box">
       <h1 id="matchText"></h1>
@@ -261,9 +282,9 @@
 
     // Dictionary for additional GIFs (for Scene 4)
     // For each type, we now assume:
-    // - For grass: left GIF: bulbasaur.gif (4x larger), right GIF: chikorita.gif (default)
-    // - For fire: left GIF: torchic.gif (2x larger), right GIF: charmander.gif (default)
-    // - For water: left GIF: piplup.gif (4x larger), right GIF: squirtle.gif (default)
+    // - Grass: left GIF: bulbasaur.gif (4x larger), right GIF: chikorita.gif (default)
+    // - Fire: left GIF: torchic.gif (2x larger), right GIF: charmander.gif (default)
+    // - Water: left GIF: piplup.gif (4x larger), right GIF: squirtle.gif (default)
     const gifInfo = {
       grass: {
         left: { src: "bulbasaur.gif", scale: 4 },
@@ -319,28 +340,14 @@
       document.getElementById('matchImage').src = "grace pokemon/" + matchInfo[selectedType].image;
       document.getElementById('matchText').textContent = matchInfo[selectedType].final;
       
-      // Populate the GIF containers based on selectedType
-      const leftGifContainer = document.getElementById('leftGifContainer');
-      const rightGifContainer = document.getElementById('rightGifContainer');
-      leftGifContainer.innerHTML = "";
-      rightGifContainer.innerHTML = "";
-      
-      // Create left GIF with specified scale (base size = 150px)
-      const leftGif = document.createElement('img');
+      // Set up the side GIFs based on selectedType
+      const leftGif = document.getElementById('leftGif');
+      const rightGif = document.getElementById('rightGif');
       leftGif.src = "grace pokemon/" + gifInfo[selectedType].left.src;
-      leftGif.style.width = (150 * gifInfo[selectedType].left.scale) + "px";
-      leftGif.style.height = "auto";
-      leftGif.style.margin = "10px";
-      
-      // Create right GIF with default size (base size)
-      const rightGif = document.createElement('img');
       rightGif.src = "grace pokemon/" + gifInfo[selectedType].right.src;
+      // Base size is 150px; multiply by scale for width
+      leftGif.style.width = (150 * gifInfo[selectedType].left.scale) + "px";
       rightGif.style.width = (150 * gifInfo[selectedType].right.scale) + "px";
-      rightGif.style.height = "auto";
-      rightGif.style.margin = "10px";
-      
-      leftGifContainer.appendChild(leftGif);
-      rightGifContainer.appendChild(rightGif);
     });
     document.getElementById('noConfirmBtn').addEventListener('click', function() {
       // Reset the selected pokéball's image to the closed image
