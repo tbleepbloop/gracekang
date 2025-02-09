@@ -27,7 +27,6 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      
       /* Center content vertically and horizontally */
       display: flex;
       flex-direction: column;
@@ -92,7 +91,7 @@
       gap: 50px;
       margin-top: 30px;
     }
-    /* Wrap each pokeball image in a container */
+    /* Wrap each pokéball image in a container so we can use pseudo-elements */
     .pokeball-container {
       position: relative;
       display: inline-block;
@@ -156,7 +155,7 @@
     </div>
   </div>
 
-  <!-- Scene 2: Pokeball Selection -->
+  <!-- Scene 2: Pokéball Selection -->
   <div id="scene2" class="scene">
     <div class="text-box">
       <h1>Toan is in trouble!<br>Release a POKEMON and rescue him!</h1>
@@ -164,20 +163,20 @@
     <div class="pokeballs">
       <!-- Left = grass, Middle = fire, Right = water -->
       <div class="pokeball-container" data-type="grass" data-hover="Grass Type">
-        <img src="grace pokemon/pokeball closed.png" alt="Grass Pokeball">
+        <img src="grace pokemon/pokeball closed.png" alt="Grass Pokéball">
       </div>
       <div class="pokeball-container" data-type="fire" data-hover="Fire Type">
-        <img src="grace pokemon/pokeball closed.png" alt="Fire Pokeball">
+        <img src="grace pokemon/pokeball closed.png" alt="Fire Pokéball">
       </div>
       <div class="pokeball-container" data-type="water" data-hover="Water Type">
-        <img src="grace pokemon/pokeball closed.png" alt="Water Pokeball">
+        <img src="grace pokemon/pokeball closed.png" alt="Water Pokéball">
       </div>
     </div>
   </div>
 
   <!-- Scene 3: Confirmation -->
   <div id="scene3" class="scene">
-    <!-- Display the selected Pokémon image (using same approach as Scene 4) -->
+    <!-- Display the selected match image (same method as Scene 4) -->
     <img id="selectedPokemon" src="" style="width:200px; margin-bottom:20px;">
     <div class="text-box">
       <h1>Do you choose this POKEMON?</h1>
@@ -203,11 +202,20 @@
     let selectedType = '';
     let selectedContainer = null; // Reference to the container that was clicked
 
-    // Dictionary for Scene 3 images
-    const pokemonImages = {
-      grass: { image: 'grass.png' },
-      fire: { image: 'fire.png' },
-      water: { image: 'water.png' }
+    // Global dictionary for match images and messages (used in both Scene 3 and 4)
+    const matchInfo = {
+      grass: {
+        image: 'grass match.png',
+        final: 'Grace, I will never LEAF your side! Will you be my VALENTINE?'
+      },
+      fire: {
+        image: 'fire match.png',
+        final: 'Grace, you set my heart on FIRE! Will you be my VALENTINE?'
+      },
+      water: {
+        image: 'water match.png',
+        final: 'Grace, WATER you waiting for, will you be my VALENTINE?'
+      }
     };
 
     // Scene 1 Interactions
@@ -220,7 +228,7 @@
       document.body.style.backgroundImage = "url('grace pokemon/pink background.jpg')";
     });
 
-    // Scene 2 Interactions
+    // Scene 2 Interactions – Clicking a Pokéball Container
     const containers = document.querySelectorAll('.pokeball-container');
     containers.forEach(container => {
       container.addEventListener('click', async function() {
@@ -232,39 +240,26 @@
         await new Promise(resolve => setTimeout(resolve, 500));
         img.src = "grace pokemon/pokeball open.png";
         await new Promise(resolve => setTimeout(resolve, 500));
-        // Now display the correct Pokémon image using the same approach as Scene 4
-        img.src = "grace pokemon/" + pokemonImages[selectedType].image;
-        // Also set the confirmation image in Scene 3
-        document.getElementById('selectedPokemon').src = "grace pokemon/" + pokemonImages[selectedType].image;
+        // Now display the correct match image (using the same method as Scene 4)
+        img.src = "grace pokemon/" + matchInfo[selectedType].image;
+        // Also set the confirmation image in Scene 3 to be the same
+        document.getElementById('selectedPokemon').src = "grace pokemon/" + matchInfo[selectedType].image;
         // Transition to Scene 3
         document.getElementById('scene2').classList.remove('active');
         document.getElementById('scene3').classList.add('active');
       });
     });
 
-    // Scene 3 Interactions
+    // Scene 3 Interactions – Confirming the Choice
     document.getElementById('yesBtn').addEventListener('click', function() {
-      const matchInfo = {
-        grass: {
-          image: 'grass match.png',
-          final: 'Grace, I will never LEAF your side! Will you be my VALENTINE?'
-        },
-        fire: {
-          image: 'fire match.png',
-          final: 'Grace, you set my heart on FIRE! Will you be my VALENTINE?'
-        },
-        water: {
-          image: 'water match.png',
-          final: 'Grace, WATER you waiting for, will you be my VALENTINE?'
-        }
-      };
+      // Transition to Scene 4 and display final match image and message
       document.getElementById('scene3').classList.remove('active');
       document.getElementById('scene4').classList.add('active');
       document.getElementById('matchImage').src = "grace pokemon/" + matchInfo[selectedType].image;
       document.getElementById('matchText').textContent = matchInfo[selectedType].final;
     });
     document.getElementById('noConfirmBtn').addEventListener('click', function() {
-      // Reset the selected pokéball's image to closed
+      // Reset the selected pokéball's image to the closed image
       if(selectedContainer) {
         selectedContainer.querySelector('img').src = "grace pokemon/pokeball closed.png";
       }
