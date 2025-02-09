@@ -17,9 +17,10 @@
       transition: background-image 1s;
     }
 
-    /* ------------------------------------------------------------------
-       SCENE TRANSITIONS (FADE IN / FADE OUT) & CENTERING
-       ------------------------------------------------------------------ */
+    /* -------------------------------
+       FADE IN/OUT FOR SCENE TRANSITIONS 
+       and center everything
+       ------------------------------- */
     .scene {
       opacity: 0;
       visibility: hidden;
@@ -27,6 +28,8 @@
       position: absolute;
       width: 100%;
       height: 100%;
+      
+      /* Center content vertically and horizontally */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -60,7 +63,7 @@
       font-size: 18px;
       line-height: 1.4;
       margin: 0;
-      transform: translateY(-40px);
+      transform: translateY(-60px);
     }
 
     .buttons {
@@ -121,6 +124,25 @@
       width: 300px;
       margin-bottom: 30px;
     }
+
+    /* -------------------------------
+       Overlay for Fade-In From Black
+       ------------------------------- */
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      z-index: 1000;
+      animation: fadeOut 1.5s forwards;
+      pointer-events: none;
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
   </style>
 </head>
 <body>
@@ -150,6 +172,8 @@
 
   <!-- Scene 3: Confirmation -->
   <div id="scene3" class="scene">
+    <!-- Display the selected Pokémon image -->
+    <img id="selectedPokemon" src="" style="width:200px; margin-bottom:20px;">
     <div class="text-box">
       <h1>Do you choose this POKEMON?</h1>
     </div>
@@ -167,8 +191,12 @@
     </div>
   </div>
 
+  <!-- Black Overlay for Fade-In -->
+  <div id="overlay"></div>
+
   <script>
     let selectedType = '';
+    let selectedBall = null; // Reference to the clicked pokéball
 
     // (Optional) Reinforce the correct type based on order.
     const pokeballs = document.querySelectorAll('.pokeball');
@@ -210,14 +238,20 @@
 
       ball.addEventListener('click', async function() {
         selectedType = this.dataset.type;
+        selectedBall = this; // Save the clicked ball for later reset if needed
+
         // Play the opening animation sequence
         this.src = `grace pokemon/pokeball mid opening.png`;
         await new Promise(resolve => setTimeout(resolve, 500));
         this.src = `grace pokemon/pokeball open.png`;
         await new Promise(resolve => setTimeout(resolve, 500));
-        // Now show the corresponding type image with the updated filename
+        // Now show the corresponding Pokémon image with the updated filename
         this.src = `grace pokemon/${selectedType}.png`;
 
+        // Set the image in Scene 3 (confirmation screen)
+        document.getElementById('selectedPokemon').src = `grace pokemon/${selectedType}.png`;
+
+        // Transition to Scene 3
         document.getElementById('scene2').classList.remove('active');
         document.getElementById('scene3').classList.add('active');
       });
@@ -225,6 +259,7 @@
 
     // Scene 3 Interactions (Final Confirmation)
     document.getElementById('yesBtn').addEventListener('click', function() {
+      // Match info contains the final image and final message for each type.
       const matchInfo = {
         grass: {
           image: 'grass match.png',
@@ -242,13 +277,27 @@
 
       document.getElementById('scene3').classList.remove('active');
       document.getElementById('scene4').classList.add('active');
+      // Display the final match image and message
       document.getElementById('matchImage').src = `grace pokemon/${matchInfo[selectedType].image}`;
       document.getElementById('matchText').textContent = matchInfo[selectedType].final;
     });
 
     document.getElementById('noConfirmBtn').addEventListener('click', function() {
+      // Reset the selected ball back to its original closed image
+      if(selectedBall) {
+        selectedBall.src = "grace pokemon/pokeball closed.png";
+      }
+      // Clear the confirmation image
+      document.getElementById('selectedPokemon').src = '';
+      // Transition back to Scene 2
       document.getElementById('scene3').classList.remove('active');
       document.getElementById('scene2').classList.add('active');
+    });
+
+    // Remove the overlay after the fade-out animation completes
+    const overlay = document.getElementById('overlay');
+    overlay.addEventListener('animationend', function() {
+      overlay.style.display = 'none';
     });
   </script>
 </body>
