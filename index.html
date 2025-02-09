@@ -42,8 +42,17 @@
             width: 600px;
             height: 200px;
             text-align: center;
-            padding: 50px;
+            padding: 70px 50px;
             margin-bottom: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .text-box h1 {
+            font-size: 18px;
+            line-height: 1.4;
+            margin: 0;
         }
 
         .buttons {
@@ -76,12 +85,12 @@
         .pokeballs {
             display: flex;
             gap: 50px;
-            margin-top: 50px;
+            margin-top: 30px;
         }
 
         .pokeball {
-            width: 100px;
-            height: 100px;
+            width: 150px;
+            height: 150px;
             cursor: pointer;
             transition: transform 0.3s;
             position: relative;
@@ -97,12 +106,19 @@
             left: 50%;
             transform: translateX(-50%);
             white-space: nowrap;
+            font-size: 14px;
         }
 
         .final-text {
-            font-size: 24px;
+            font-size: 20px;
             text-align: center;
-            max-width: 600px;
+            max-width: 700px;
+            padding: 80px 60px;
+        }
+
+        .match-image {
+            width: 300px;
+            margin-bottom: 30px;
         }
     </style>
 </head>
@@ -120,6 +136,9 @@
 
     <!-- Scene 2: Pokeball Selection -->
     <div id="scene2" class="scene">
+        <div class="text-box">
+            <h1>Toan is in trouble!<br>Release a POKEMON and rescue him!</h1>
+        </div>
         <div class="pokeballs">
             <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="grass">
             <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="fire">
@@ -138,8 +157,16 @@
         </div>
     </div>
 
-    <!-- Scene 4: Final Message -->
+    <!-- Scene 4: Match Display -->
     <div id="scene4" class="scene">
+        <img id="matchImage" class="match-image">
+        <div class="text-box">
+            <h1 id="matchText"></h1>
+        </div>
+    </div>
+
+    <!-- Scene 5: Final Message -->
+    <div id="scene5" class="scene">
         <div class="text-box final-text">
             <h1 id="finalMessage"></h1>
         </div>
@@ -189,15 +216,34 @@
 
         // Scene 3 Interactions
         document.getElementById('yesBtn').addEventListener('click', function() {
-            const messages = {
-                grass: "Grace, I will never LEAF your side! Will you be my VALENTINE?",
-                fire: "Grace, you set my heart on FIRE! Will you be my VALENTINE?",
-                water: "Grace, WATER you waiting for, will you be my VALENTINE?"
+            const matchInfo = {
+                grass: {
+                    image: 'grass match.png',
+                    text: 'You found a loyal companion!',
+                    final: 'Grace, I will never LEAF your side! Will you be my VALENTINE?'
+                },
+                fire: {
+                    image: 'fire match.png',
+                    text: 'You set my heart on FIRE!',
+                    final: 'Grace, you set my heart on FIRE! Will you be my VALENTINE?'
+                },
+                water: {
+                    image: 'water match.png',
+                    text: 'WATER you waiting for, Be mine!',
+                    final: 'Grace, WATER you waiting for, will you be my VALENTINE?'
+                }
             };
 
             document.getElementById('scene3').classList.remove('active');
             document.getElementById('scene4').classList.add('active');
-            document.getElementById('finalMessage').textContent = messages[selectedType];
+            document.getElementById('matchImage').src = `grace pokemon/${matchInfo[selectedType].image}`;
+            document.getElementById('matchText').textContent = matchInfo[selectedType].text;
+            
+            setTimeout(() => {
+                document.getElementById('scene4').classList.remove('active');
+                document.getElementById('scene5').classList.add('active');
+                document.getElementById('finalMessage').textContent = matchInfo[selectedType].final;
+            }, 3000);
         });
 
         document.getElementById('noConfirmBtn').addEventListener('click', function() {
