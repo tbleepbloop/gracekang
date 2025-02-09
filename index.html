@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <title>Will You Be My Valentine?</title>
   <style>
-    /* Import the custom font from the "grace pokemon" folder */
+    /* Import the custom font with URL-encoded spaces */
     @font-face {
       font-family: 'PokemonGB';
-      src: url('grace pokemon/Pokemon GB.ttf') format('truetype');
+      src: url('grace%20pokemon/Pokemon%20GB.ttf') format('truetype');
     }
 
     /* Reset margins, paddings and ensure full-screen display */
@@ -19,7 +19,7 @@
       overflow: hidden;
     }
 
-    /* Common styles for “scenes” */
+    /* Common styles for scenes */
     .scene {
       position: absolute;
       width: 100%;
@@ -29,7 +29,6 @@
       justify-content: center;
       flex-direction: column;
     }
-    /* Classes to fade-in and fade-out scenes */
     .fade-in {
       animation: fadeIn 1s forwards;
     }
@@ -46,13 +45,12 @@
     }
 
     /* ===== SCENE 1 ===== */
-    /* Light pink background and central text inside a textbox image */
     #scene1 {
       background-color: #ffccdd; /* light pink */
       display: flex;
     }
     .textbox {
-      background: url('grace pokemon/pokemon textbox.png') no-repeat center/contain;
+      background: url('grace%20pokemon/pokemon%20textbox.png') no-repeat center/contain;
       width: 600px;
       height: 200px;
       display: flex;
@@ -71,7 +69,7 @@
     .bubble {
       width: 100px;
       height: 100px;
-      background-color: #8B0000; /* deep red */
+      background-color: #8B0000;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -82,7 +80,6 @@
       cursor: pointer;
       user-select: none;
     }
-    /* “No” bubble animation to fly off the screen */
     @keyframes flyOff {
       0% { transform: translate(0, 0) rotate(0deg); }
       100% { transform: translate(800px, -600px) rotate(720deg); opacity: 0; }
@@ -92,9 +89,8 @@
     }
 
     /* ===== SCENE 2 ===== */
-    /* New background image and container for the three pokeballs */
     #scene2 {
-      background: url('grace pokemon/pink background.jpg') no-repeat center/cover;
+      background: url('grace%20pokemon/pink%20background.jpg') no-repeat center/cover;
       display: flex;
       flex-direction: column;
     }
@@ -115,7 +111,6 @@
       width: 100%;
       height: 100%;
     }
-    /* Each pokeball shows a label on hover */
     .ball-label {
       position: absolute;
       top: -30px;
@@ -131,10 +126,9 @@
     .pokeball:hover .ball-label {
       display: block;
     }
-    /* Prompt asking "Do you choose this POKEMON?" */
     .choice-prompt {
       margin-top: 30px;
-      background: url('grace pokemon/pokemon textbox.png') no-repeat center/contain;
+      background: url('grace%20pokemon/pokemon%20textbox.png') no-repeat center/contain;
       width: 500px;
       height: 150px;
       display: flex;
@@ -167,9 +161,8 @@
     }
 
     /* ===== SCENE 3 ===== */
-    /* Final scene with the match image and final message */
     #scene3 {
-      background: url('grace pokemon/pink background.jpg') no-repeat center/cover;
+      background: url('grace%20pokemon/pink%20background.jpg') no-repeat center/cover;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -185,7 +178,7 @@
   </style>
 </head>
 <body>
-  <!-- ===== Scene 1: Introduction ===== -->
+  <!-- Scene 1: Introduction -->
   <div id="scene1" class="scene fade-in">
     <div class="textbox">
       Toan is in trouble! Release a POKEMON and rescue him!
@@ -196,23 +189,22 @@
     </div>
   </div>
 
-  <!-- ===== Scene 2: Pokeball Selection ===== -->
+  <!-- Scene 2: Pokeball Selection -->
   <div id="scene2" class="scene">
     <div class="pokeball-container">
       <div class="pokeball" data-type="grass" id="ballGrass">
         <span class="ball-label">GRASS TYPE</span>
-        <img src="grace pokemon/pokeball closed.png" alt="Pokeball">
+        <img src="grace%20pokemon/pokeball%20closed.png" alt="Pokeball">
       </div>
       <div class="pokeball" data-type="fire" id="ballFire">
         <span class="ball-label">FIRE TYPE</span>
-        <img src="grace pokemon/pokeball closed.png" alt="Pokeball">
+        <img src="grace%20pokemon/pokeball%20closed.png" alt="Pokeball">
       </div>
       <div class="pokeball" data-type="water" id="ballWater">
         <span class="ball-label">WATER TYPE</span>
-        <img src="grace pokemon/pokeball closed.png" alt="Pokeball">
+        <img src="grace%20pokemon/pokeball%20closed.png" alt="Pokeball">
       </div>
     </div>
-    <!-- The prompt appears after a ball is clicked -->
     <div id="choicePrompt" class="choice-prompt" style="display:none;">
       <div>Do you choose this POKEMON?</div>
       <div class="choice-buttons">
@@ -222,16 +214,14 @@
     </div>
   </div>
 
-  <!-- ===== Scene 3: Final Match ===== -->
+  <!-- Scene 3: Final Match -->
   <div id="scene3" class="scene">
     <img id="matchImage" src="" alt="Match" style="width:200px; height:auto;">
     <div id="finalText" class="final-text"></div>
   </div>
 
   <script>
-    // Wait until the DOM is fully loaded
     document.addEventListener("DOMContentLoaded", function() {
-      // Get scene and control elements
       const scene1 = document.getElementById("scene1");
       const scene2 = document.getElementById("scene2");
       const scene3 = document.getElementById("scene3");
@@ -242,15 +232,12 @@
       const choiceNo = document.getElementById("choiceNo");
       const pokeballs = document.querySelectorAll(".pokeball");
 
-      let selectedBall = null; // to store the chosen ball element
+      let selectedBall = null;
 
-      /* ----- Scene 1 Events ----- */
-      // When "No" is clicked, animate that bubble off the screen.
+      // Scene 1 Events
       bubbleNo.addEventListener("click", function() {
         bubbleNo.classList.add("fly-off");
       });
-
-      // When "Okay" is clicked, fade out Scene 1 and transition to Scene 2.
       bubbleOkay.addEventListener("click", function() {
         scene1.classList.remove("fade-in");
         scene1.classList.add("fade-out");
@@ -261,63 +248,51 @@
         }, 1000);
       });
 
-      /* ----- Scene 2: Pokeball Selection ----- */
-      // Add click listeners to each pokeball.
+      // Scene 2: Pokeball Selection
       pokeballs.forEach(function(ball) {
         ball.addEventListener("click", function() {
-          // Prevent selecting another ball if one is already chosen.
           if (selectedBall) return;
           selectedBall = ball;
           const img = ball.querySelector("img");
-          // Simulate the ball opening animation:
           setTimeout(function() {
-            img.src = "grace pokemon/pokeball mid opening.png";
+            img.src = "grace%20pokemon/pokeball%20mid%20opening.png";
           }, 200);
           setTimeout(function() {
-            img.src = "grace pokemon/pokeball open.png";
+            img.src = "grace%20pokemon/pokeball%20open.png";
           }, 600);
-          // After the animation, change all ball images to show their type.
           setTimeout(function() {
-            document.getElementById("ballGrass").querySelector("img").src = "grace pokemon/grass type.png";
-            document.getElementById("ballFire").querySelector("img").src = "grace pokemon/fire type.png";
-            document.getElementById("ballWater").querySelector("img").src = "grace pokemon/water type.png";
-            // Show the choice prompt.
+            document.getElementById("ballGrass").querySelector("img").src = "grace%20pokemon/grass%20type.png";
+            document.getElementById("ballFire").querySelector("img").src = "grace%20pokemon/fire%20type.png";
+            document.getElementById("ballWater").querySelector("img").src = "grace%20pokemon/water%20type.png";
             choicePrompt.style.display = "flex";
           }, 1200);
         });
       });
 
-      // If the user clicks "No" on the prompt, hide it and allow a new selection.
       choiceNo.addEventListener("click", function() {
         choicePrompt.style.display = "none";
         selectedBall = null;
-        // Reset all pokeballs back to the closed state.
         pokeballs.forEach(function(ball) {
-          ball.querySelector("img").src = "grace pokemon/pokeball closed.png";
+          ball.querySelector("img").src = "grace%20pokemon/pokeball%20closed.png";
         });
       });
 
-      // If the user clicks "Yes" on the prompt, proceed with the match.
       choiceYes.addEventListener("click", function() {
-        // Determine which ball (type) was selected.
         let ballType = selectedBall.getAttribute("data-type");
         let matchImageSrc = "";
         let finalMessage = "";
         if (ballType === "grass") {
-          matchImageSrc = "grace pokemon/grass match.png";
+          matchImageSrc = "grace%20pokemon/grass%20match.png";
           finalMessage = "Grace, I will never LEAF your side! Will you be my VALENTINE?";
         } else if (ballType === "fire") {
-          matchImageSrc = "grace pokemon/fire match.png";
+          matchImageSrc = "grace%20pokemon/fire%20match.png";
           finalMessage = "Grace, you set my heart on FIRE! Will you be my VALENTINE?";
         } else if (ballType === "water") {
-          matchImageSrc = "grace pokemon/water match.png";
+          matchImageSrc = "grace%20pokemon/water%20match.png";
           finalMessage = "Grace, WATER you waiting for, will you be my VALENTINE?";
         }
-        // Update the chosen ball’s image with the match image.
         selectedBall.querySelector("img").src = matchImageSrc;
         choicePrompt.style.display = "none";
-
-        // After a brief pause, fade out Scene 2 and transition to Scene 3.
         setTimeout(function() {
           scene2.classList.remove("fade-in");
           scene2.classList.add("fade-out");
@@ -325,7 +300,6 @@
             scene2.style.display = "none";
             scene3.style.display = "flex";
             scene3.classList.add("fade-in");
-            // Set the match image and final text.
             document.getElementById("matchImage").src = matchImageSrc;
             document.getElementById("finalText").textContent = finalMessage;
           }, 1000);
