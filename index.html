@@ -55,12 +55,11 @@
       align-items: center;
       justify-content: center;
     }
-    /* Default text shift (will be overridden per scene) */
+    /* Default h1 style; overridden in each scene as needed */
     .text-box h1 {
       font-size: 18px;
       line-height: 1.4;
       margin: 0;
-      transform: translateY(-80px);
     }
 
     .buttons {
@@ -89,6 +88,7 @@
     .pokeballs {
       display: flex;
       gap: 50px;
+      /* Default margin; overridden in Scene 2 */
       margin-top: 30px;
     }
     /* Wrap each pokéball image in a container so we can use pseudo-elements */
@@ -142,39 +142,40 @@
       to { opacity: 0; }
     }
 
-    /* Custom adjustments per scene */
+    /* ----- Scene-Specific Adjustments ----- */
 
     /* Scene 1 adjustments */
-    #scene1 .text-box {
-      margin-bottom: 20px; /* Buttons closer to textbox */
-    }
     #scene1 .text-box h1 {
-      transform: translateY(-100px); /* More negative to center text */
+      transform: translateY(-60px);  /* Lower the text (less negative) */
+    }
+    #scene1 .buttons {
+      margin-top: -30px;  /* Raise the buttons upward */
     }
 
     /* Scene 2 adjustments */
     #scene2 .text-box h1 {
-      transform: translateY(-100px); /* Shift text further upward */
+      transform: translateY(-60px);  /* Lower the text */
+    }
+    /* Make pokéballs larger and bring them closer to the textbox */
+    #scene2 .pokeball-container img {
+      width: 200px;
+      height: 200px;
     }
     #scene2 .pokeballs {
-      margin-top: 10px; /* Bring pokeballs closer to the textbox */
-    }
-    #scene2 .pokeball-container img {
-      width: 200px; /* Make pokeballs larger */
-      height: 200px;
+      margin-top: -20px;  /* Raise pokéballs upward */
     }
 
     /* Scene 3 adjustments */
-    #scene3 .text-box {
-      margin-bottom: 20px; /* Buttons closer to textbox */
-    }
     #scene3 .text-box h1 {
-      transform: translateY(-40px); /* Lower the text inside the textbox a bit */
+      transform: translateY(-60px);  /* Raise text a little bit (more negative) */
+    }
+    #scene3 .buttons {
+      margin-top: -20px;  /* Raise the buttons upward */
     }
 
     /* Scene 4 adjustments */
     #scene4 .text-box h1 {
-      transform: translateY(-60px); /* Center text inside textbox, lower a bit */
+      transform: translateY(-60px);  /* Set text at the ideal, dead-center height */
     }
   </style>
 </head>
