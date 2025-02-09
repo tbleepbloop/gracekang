@@ -8,7 +8,6 @@
       font-family: 'Pokemon';
       src: url('grace pokemon/Pokemon GB.ttf') format('truetype');
     }
-
     body {
       margin: 0;
       height: 100vh;
@@ -16,7 +15,6 @@
       font-family: 'Pokemon', sans-serif;
       transition: background-image 1s;
     }
-
     /* -------------------------------------
        Scene Transitions & Centering
        ------------------------------------- */
@@ -37,11 +35,9 @@
       opacity: 1;
       visibility: visible;
     }
-    
     #scene1 {
       background-color: #FFB6C1;
     }
-
     .text-box {
       background-image: url('grace pokemon/pokemon textbox.png');
       background-size: contain;
@@ -56,7 +52,7 @@
       justify-content: center;
       position: relative;
     }
-    /* Instead of a full pseudo-element, style the h1 so its white box fits the text */
+    /* Style the h1 so its white background fits only the text */
     .text-box h1 {
       font-size: 18px;
       line-height: 1.4;
@@ -64,13 +60,13 @@
       background-color: rgba(255, 255, 255, 0.8);
       display: inline-block;
       padding: 10px 20px;
-      /* Default transform; overridden per scene if needed */
-      transform: translateY(-60px);
+      transform: translateY(-60px); /* default; scene-specific overrides below */
     }
-
     .buttons {
       display: flex;
       gap: 50px;
+      /* Default margin-top; overridden per scene */
+      margin-top: 0;
     }
     .bubble {
       background-color: #8B0000;
@@ -90,13 +86,12 @@
       0% { transform: translateY(0) rotate(0); }
       100% { transform: translateY(-1000px) rotate(360deg); opacity: 0; }
     }
-
     .pokeballs {
       display: flex;
       gap: 50px;
-      margin-top: 30px;
+      margin-top: 30px; /* default; scene-specific override below */
     }
-    /* Wrap each pokéball image in a container so we can use pseudo-elements */
+    /* Wrap each pokéball image in a container for hover text */
     .pokeball-container {
       position: relative;
       display: inline-block;
@@ -111,7 +106,6 @@
     .pokeball-container:hover img {
       transform: scale(1.1);
     }
-    /* Use a pseudo-element on the container for hover text */
     .pokeball-container:hover::after {
       content: attr(data-hover);
       position: absolute;
@@ -122,12 +116,10 @@
       font-size: 14px;
       color: #000;
     }
-
     .match-image {
       width: 300px;
-      margin-bottom: 30px;
+      margin: 0 20px;
     }
-
     /* -------------------------------------
        Overlay for Fade-In from Black
        ------------------------------------- */
@@ -146,41 +138,42 @@
       from { opacity: 1; }
       to { opacity: 0; }
     }
-
     /* ----- Scene-Specific Adjustments ----- */
-
     /* Scene 1 adjustments */
     #scene1 .text-box h1 {
-      transform: translateY(-60px);  /* Lower the text a bit */
+      transform: translateY(-60px); /* Lower the text a bit */
     }
     #scene1 .buttons {
-      margin-top: -30px;  /* Raise the buttons upward */
+      margin-top: -30px; /* Raise the buttons upward */
     }
-
     /* Scene 2 adjustments */
     #scene2 .text-box h1 {
-      transform: translateY(-60px);  /* Lower the text */
+      transform: translateY(-60px); /* Lower the text */
     }
-    /* Make pokéballs larger and bring them closer to the textbox */
     #scene2 .pokeball-container img {
       width: 200px;
       height: 200px;
     }
     #scene2 .pokeballs {
-      margin-top: -20px;  /* Raise pokéballs upward */
+      margin-top: -20px; /* Raise pokéballs upward */
     }
-
     /* Scene 3 adjustments */
     #scene3 .text-box h1 {
-      transform: translateY(-60px);  /* Adjust text vertical position */
+      transform: translateY(-50px); /* Raise text a little bit (less negative) */
     }
     #scene3 .buttons {
-      margin-top: -20px;  /* Raise the buttons upward */
+      margin-top: -40px; /* Raise the buttons closer to center */
     }
-
     /* Scene 4 adjustments */
     #scene4 .text-box h1 {
-      transform: translateY(-60px);  /* Center text inside textbox */
+      transform: translateY(-60px); /* Center text inside textbox */
+    }
+    /* Center container in Scene 4 for match image and GIFs */
+    #centerContainer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
     }
   </style>
 </head>
@@ -195,7 +188,6 @@
       <div class="bubble" id="noBtn">No</div>
     </div>
   </div>
-
   <!-- Scene 2: Pokéball Selection -->
   <div id="scene2" class="scene">
     <div class="text-box">
@@ -214,7 +206,6 @@
       </div>
     </div>
   </div>
-
   <!-- Scene 3: Confirmation -->
   <div id="scene3" class="scene">
     <!-- Display the selected base image (grass.png, fire.png, or water.png) -->
@@ -227,20 +218,20 @@
       <div class="bubble" id="noConfirmBtn">No</div>
     </div>
   </div>
-
   <!-- Scene 4: Final Match Display (Final Message, Image, and GIFs) -->
   <div id="scene4" class="scene">
-    <img id="matchImage" class="match-image" src="">
-    <!-- Container for the additional GIFs -->
-    <div id="gifContainer" style="margin-top:20px;"></div>
+    <!-- New container for centering match image and GIFs horizontally -->
+    <div id="centerContainer">
+      <div id="leftGifContainer"></div>
+      <img id="matchImage" class="match-image" src="">
+      <div id="rightGifContainer"></div>
+    </div>
     <div class="text-box">
       <h1 id="matchText"></h1>
     </div>
   </div>
-
   <!-- Black Overlay for Fade-In -->
   <div id="overlay"></div>
-
   <script>
     let selectedType = '';
     let selectedContainer = null; // Reference to the container that was clicked
@@ -269,10 +260,23 @@
     };
 
     // Dictionary for additional GIFs (for Scene 4)
+    // For each type, we now assume:
+    // - For grass: left GIF: bulbasaur.gif (4x larger), right GIF: chikorita.gif (default)
+    // - For fire: left GIF: torchic.gif (2x larger), right GIF: charmander.gif (default)
+    // - For water: left GIF: piplup.gif (4x larger), right GIF: squirtle.gif (default)
     const gifInfo = {
-      grass: ["chikorita.gif", "bulbasaur.gif"],
-      fire: ["torchic.gif", "charmander.gif"],
-      water: ["piplup.gif", "squirtle.gif"]
+      grass: {
+        left: { src: "bulbasaur.gif", scale: 4 },
+        right: { src: "chikorita.gif", scale: 1 }
+      },
+      fire: {
+        left: { src: "torchic.gif", scale: 2 },
+        right: { src: "charmander.gif", scale: 1 }
+      },
+      water: {
+        left: { src: "piplup.gif", scale: 4 },
+        right: { src: "squirtle.gif", scale: 1 }
+      }
     };
 
     // Scene 1 Interactions
@@ -315,16 +319,28 @@
       document.getElementById('matchImage').src = "grace pokemon/" + matchInfo[selectedType].image;
       document.getElementById('matchText').textContent = matchInfo[selectedType].final;
       
-      // Populate the GIF container with the corresponding GIFs
-      const gifContainer = document.getElementById('gifContainer');
-      gifContainer.innerHTML = ""; // Clear previous content
-      gifInfo[selectedType].forEach(gif => {
-        const gifImg = document.createElement('img');
-        gifImg.src = "grace pokemon/" + gif;
-        gifImg.style.width = "150px";  // a little smaller than the pokeball
-        gifImg.style.margin = "10px";
-        gifContainer.appendChild(gifImg);
-      });
+      // Populate the GIF containers based on selectedType
+      const leftGifContainer = document.getElementById('leftGifContainer');
+      const rightGifContainer = document.getElementById('rightGifContainer');
+      leftGifContainer.innerHTML = "";
+      rightGifContainer.innerHTML = "";
+      
+      // Create left GIF with specified scale (base size = 150px)
+      const leftGif = document.createElement('img');
+      leftGif.src = "grace pokemon/" + gifInfo[selectedType].left.src;
+      leftGif.style.width = (150 * gifInfo[selectedType].left.scale) + "px";
+      leftGif.style.height = "auto";
+      leftGif.style.margin = "10px";
+      
+      // Create right GIF with default size (base size)
+      const rightGif = document.createElement('img');
+      rightGif.src = "grace pokemon/" + gifInfo[selectedType].right.src;
+      rightGif.style.width = (150 * gifInfo[selectedType].right.scale) + "px";
+      rightGif.style.height = "auto";
+      rightGif.style.margin = "10px";
+      
+      leftGifContainer.appendChild(leftGif);
+      rightGifContainer.appendChild(rightGif);
     });
     document.getElementById('noConfirmBtn').addEventListener('click', function() {
       // Reset the selected pokéball's image to the closed image
@@ -337,7 +353,6 @@
       document.getElementById('scene3').classList.remove('active');
       document.getElementById('scene2').classList.add('active');
     });
-
     // Remove the overlay after the fade-out animation completes
     const overlay = document.getElementById('overlay');
     overlay.addEventListener('animationend', function() {
