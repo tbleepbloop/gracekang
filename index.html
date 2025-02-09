@@ -17,10 +17,9 @@
       transition: background-image 1s;
     }
 
-    /* -------------------------------
-       FADE IN/OUT FOR SCENE TRANSITIONS 
-       and center everything
-       ------------------------------- */
+    /* -------------------------------------
+       Scene Transitions & Centering
+       ------------------------------------- */
     .scene {
       opacity: 0;
       visibility: hidden;
@@ -29,7 +28,7 @@
       width: 100%;
       height: 100%;
       
-      /* Center content vertically and horizontally */
+      /* Center content */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -39,7 +38,7 @@
       opacity: 1;
       visibility: visible;
     }
-
+    
     #scene1 {
       background-color: #FFB6C1;
     }
@@ -57,20 +56,18 @@
       align-items: center;
       justify-content: center;
     }
-
-    /* Shift text upward even more */
+    /* Shift the text further upward */
     .text-box h1 {
       font-size: 18px;
       line-height: 1.4;
       margin: 0;
-      transform: translateY(-60px);
+      transform: translateY(-80px);
     }
 
     .buttons {
       display: flex;
       gap: 50px;
     }
-
     .bubble {
       background-color: #8B0000;
       color: white;
@@ -79,15 +76,12 @@
       cursor: pointer;
       transition: transform 0.3s;
     }
-
     .bubble:hover {
       transform: scale(1.1);
     }
-
     .fly-away {
       animation: flyOff 1s forwards;
     }
-
     @keyframes flyOff {
       0% { transform: translateY(0) rotate(0); }
       100% { transform: translateY(-1000px) rotate(360deg); opacity: 0; }
@@ -98,7 +92,6 @@
       gap: 50px;
       margin-top: 30px;
     }
-
     .pokeball {
       width: 150px;
       height: 150px;
@@ -106,18 +99,18 @@
       transition: transform 0.3s;
       position: relative;
     }
-
     .pokeball:hover {
       transform: scale(1.1);
     }
-
+    /* Show hover text directly on top of the ball */
     .type-text {
       position: absolute;
-      bottom: -30px;
+      top: -20px;
       left: 50%;
       transform: translateX(-50%);
       white-space: nowrap;
       font-size: 14px;
+      color: #000;
     }
 
     .match-image {
@@ -125,9 +118,9 @@
       margin-bottom: 30px;
     }
 
-    /* -------------------------------
-       Overlay for Fade-In From Black
-       ------------------------------- */
+    /* -------------------------------------
+       Overlay for Fade-In from Black
+       ------------------------------------- */
     #overlay {
       position: fixed;
       top: 0;
@@ -163,7 +156,7 @@
       <h1>Toan is in trouble!<br>Release a POKEMON and rescue him!</h1>
     </div>
     <div class="pokeballs">
-      <!-- Left = grass, middle = fire, right = water -->
+      <!-- Left = grass, Middle = fire, Right = water -->
       <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="grass">
       <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="fire">
       <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="water">
@@ -198,23 +191,10 @@
     let selectedType = '';
     let selectedBall = null; // Reference to the clicked pokéball
 
-    // (Optional) Reinforce the correct type based on order.
-    const pokeballs = document.querySelectorAll('.pokeball');
-    pokeballs.forEach((ball, index) => {
-      if (index === 0) {
-        ball.dataset.type = 'grass';
-      } else if (index === 1) {
-        ball.dataset.type = 'fire';
-      } else if (index === 2) {
-        ball.dataset.type = 'water';
-      }
-    });
-
     // Scene 1 Interactions
     document.getElementById('noBtn').addEventListener('click', function() {
       this.classList.add('fly-away');
     });
-
     document.getElementById('okBtn').addEventListener('click', function() {
       document.getElementById('scene1').classList.remove('active');
       document.getElementById('scene2').classList.add('active');
@@ -222,44 +202,48 @@
     });
 
     // Scene 2 Interactions
-    document.querySelectorAll('.pokeball').forEach(ball => {
+    const pokeballs = document.querySelectorAll('.pokeball');
+    pokeballs.forEach((ball, index) => {
+      // (HTML already provides the correct data-type, but this reinforces it.)
+      if(index === 0) { ball.dataset.type = 'grass'; }
+      else if(index === 1) { ball.dataset.type = 'fire'; }
+      else if(index === 2) { ball.dataset.type = 'water'; }
+
+      // Show type text on hover positioned directly on top
       ball.addEventListener('mouseover', function() {
-        const type = this.dataset.type;
+        const type = ball.dataset.type;
         const typeText = document.createElement('div');
         typeText.className = 'type-text';
-        typeText.textContent = `${type.toUpperCase()} TYPE`;
-        this.appendChild(typeText);
+        // Capitalize first letter for display
+        typeText.textContent = type.charAt(0).toUpperCase() + type.slice(1) + " Type";
+        ball.appendChild(typeText);
       });
-
       ball.addEventListener('mouseout', function() {
-        const text = this.querySelector('.type-text');
-        if (text) text.remove();
+        const text = ball.querySelector('.type-text');
+        if(text) text.remove();
       });
-
+      
+      // On click, play animation then set the corresponding image.
       ball.addEventListener('click', async function() {
         selectedType = this.dataset.type;
-        selectedBall = this; // Save the clicked ball for later reset if needed
-
-        // Play the opening animation sequence
+        selectedBall = this;
+        // Animate the pokéball opening sequence
         this.src = `grace pokemon/pokeball mid opening.png`;
         await new Promise(resolve => setTimeout(resolve, 500));
         this.src = `grace pokemon/pokeball open.png`;
         await new Promise(resolve => setTimeout(resolve, 500));
-        // Now show the corresponding Pokémon image with the updated filename
+        // Now display the correct Pokémon image (grass.png, fire.png, or water.png)
         this.src = `grace pokemon/${selectedType}.png`;
-
-        // Set the image in Scene 3 (confirmation screen)
+        // Also set the confirmation image in Scene 3
         document.getElementById('selectedPokemon').src = `grace pokemon/${selectedType}.png`;
-
         // Transition to Scene 3
         document.getElementById('scene2').classList.remove('active');
         document.getElementById('scene3').classList.add('active');
       });
     });
 
-    // Scene 3 Interactions (Final Confirmation)
+    // Scene 3 Interactions
     document.getElementById('yesBtn').addEventListener('click', function() {
-      // Match info contains the final image and final message for each type.
       const matchInfo = {
         grass: {
           image: 'grass match.png',
@@ -274,16 +258,13 @@
           final: 'Grace, WATER you waiting for, will you be my VALENTINE?'
         }
       };
-
       document.getElementById('scene3').classList.remove('active');
       document.getElementById('scene4').classList.add('active');
-      // Display the final match image and message
       document.getElementById('matchImage').src = `grace pokemon/${matchInfo[selectedType].image}`;
       document.getElementById('matchText').textContent = matchInfo[selectedType].final;
     });
-
     document.getElementById('noConfirmBtn').addEventListener('click', function() {
-      // Reset the selected ball back to its original closed image
+      // Reset the clicked pokéball to its closed image
       if(selectedBall) {
         selectedBall.src = "grace pokemon/pokeball closed.png";
       }
@@ -294,11 +275,10 @@
       document.getElementById('scene2').classList.add('active');
     });
 
-    // Remove the overlay after the fade-out animation completes
+    // Remove overlay after fade-out
     const overlay = document.getElementById('overlay');
     overlay.addEventListener('animationend', function() {
       overlay.style.display = 'none';
     });
   </script>
 </body>
-</html>
