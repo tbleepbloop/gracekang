@@ -28,7 +28,7 @@
       width: 100%;
       height: 100%;
       
-      /* Center content */
+      /* Center content vertically and horizontally */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -102,8 +102,9 @@
     .pokeball:hover {
       transform: scale(1.1);
     }
-    /* Show hover text directly on top of the ball */
-    .type-text {
+    /* Use CSS pseudo-element to display hover text */
+    .pokeball:hover::after {
+      content: attr(data-hover);
       position: absolute;
       top: -20px;
       left: 50%;
@@ -157,9 +158,9 @@
     </div>
     <div class="pokeballs">
       <!-- Left = grass, Middle = fire, Right = water -->
-      <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="grass">
-      <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="fire">
-      <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="water">
+      <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="grass" data-hover="Grass Type">
+      <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="fire" data-hover="Fire Type">
+      <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="water" data-hover="Water Type">
     </div>
   </div>
 
@@ -203,29 +204,9 @@
 
     // Scene 2 Interactions
     const pokeballs = document.querySelectorAll('.pokeball');
-    pokeballs.forEach((ball, index) => {
-      // (HTML already provides the correct data-type, but this reinforces it.)
-      if(index === 0) { ball.dataset.type = 'grass'; }
-      else if(index === 1) { ball.dataset.type = 'fire'; }
-      else if(index === 2) { ball.dataset.type = 'water'; }
-
-      // Show type text on hover positioned directly on top
-      ball.addEventListener('mouseover', function() {
-        const type = ball.dataset.type;
-        const typeText = document.createElement('div');
-        typeText.className = 'type-text';
-        // Capitalize first letter for display
-        typeText.textContent = type.charAt(0).toUpperCase() + type.slice(1) + " Type";
-        ball.appendChild(typeText);
-      });
-      ball.addEventListener('mouseout', function() {
-        const text = ball.querySelector('.type-text');
-        if(text) text.remove();
-      });
-      
-      // On click, play animation then set the corresponding image.
+    pokeballs.forEach(ball => {
       ball.addEventListener('click', async function() {
-        selectedType = this.dataset.type;
+        selectedType = this.dataset.type; // "grass", "fire", or "water"
         selectedBall = this;
         // Animate the pokéball opening sequence
         this.src = `grace pokemon/pokeball mid opening.png`;
@@ -275,7 +256,7 @@
       document.getElementById('scene2').classList.add('active');
     });
 
-    // Remove overlay after fade-out
+    // Remove the overlay after the fade-out animation completes
     const overlay = document.getElementById('overlay');
     overlay.addEventListener('animationend', function() {
       overlay.style.display = 'none';
