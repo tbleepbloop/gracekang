@@ -56,15 +56,16 @@
       justify-content: center;
       position: relative;
     }
-    /* Instead of a full-box pseudo-element, we now style the h1 directly */
+    /* Instead of a full pseudo-element, style the h1 so its white box fits the text */
     .text-box h1 {
       font-size: 18px;
       line-height: 1.4;
       margin: 0;
-      /* White background behind just the text */
       background-color: rgba(255, 255, 255, 0.8);
       display: inline-block;
       padding: 10px 20px;
+      /* Default transform; overridden per scene if needed */
+      transform: translateY(-60px);
     }
 
     .buttons {
@@ -150,7 +151,7 @@
 
     /* Scene 1 adjustments */
     #scene1 .text-box h1 {
-      transform: translateY(-60px);  /* Lower the text (less negative) */
+      transform: translateY(-60px);  /* Lower the text a bit */
     }
     #scene1 .buttons {
       margin-top: -30px;  /* Raise the buttons upward */
@@ -171,7 +172,7 @@
 
     /* Scene 3 adjustments */
     #scene3 .text-box h1 {
-      transform: translateY(-60px);  /* Raise text a little bit */
+      transform: translateY(-60px);  /* Adjust text vertical position */
     }
     #scene3 .buttons {
       margin-top: -20px;  /* Raise the buttons upward */
@@ -227,9 +228,11 @@
     </div>
   </div>
 
-  <!-- Scene 4: Final Match Display (Final Message & Image) -->
+  <!-- Scene 4: Final Match Display (Final Message, Image, and GIFs) -->
   <div id="scene4" class="scene">
     <img id="matchImage" class="match-image" src="">
+    <!-- Container for the additional GIFs -->
+    <div id="gifContainer" style="margin-top:20px;"></div>
     <div class="text-box">
       <h1 id="matchText"></h1>
     </div>
@@ -263,6 +266,13 @@
         image: "water match.png",
         final: "Grace, WATER you waiting for, will you be my VALENTINE?"
       }
+    };
+
+    // Dictionary for additional GIFs (for Scene 4)
+    const gifInfo = {
+      grass: ["chikorita.gif", "bulbasaur.gif"],
+      fire: ["torchic.gif", "charmander.gif"],
+      water: ["piplup.gif", "squirtle.gif"]
     };
 
     // Scene 1 Interactions
@@ -304,6 +314,17 @@
       document.getElementById('scene4').classList.add('active');
       document.getElementById('matchImage').src = "grace pokemon/" + matchInfo[selectedType].image;
       document.getElementById('matchText').textContent = matchInfo[selectedType].final;
+      
+      // Populate the GIF container with the corresponding GIFs
+      const gifContainer = document.getElementById('gifContainer');
+      gifContainer.innerHTML = ""; // Clear previous content
+      gifInfo[selectedType].forEach(gif => {
+        const gifImg = document.createElement('img');
+        gifImg.src = "grace pokemon/" + gif;
+        gifImg.style.width = "150px";  // a little smaller than the pokeball
+        gifImg.style.margin = "10px";
+        gifContainer.appendChild(gifImg);
+      });
     });
     document.getElementById('noConfirmBtn').addEventListener('click', function() {
       // Reset the selected pokéball's image to the closed image
