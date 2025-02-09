@@ -18,7 +18,7 @@
     }
 
     /* ------------------------------------------------------------------
-       SCENE TRANSITIONS (FADE IN / FADE OUT)
+       SCENE TRANSITIONS (FADE IN / FADE OUT) & CENTERING
        ------------------------------------------------------------------ */
     .scene {
       opacity: 0;
@@ -27,6 +27,10 @@
       position: absolute;
       width: 100%;
       height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
     .scene.active {
       opacity: 1;
@@ -51,12 +55,12 @@
       justify-content: center;
     }
 
-    /* Shift text upward within the textbox */
+    /* Shift text upward even more */
     .text-box h1 {
       font-size: 18px;
       line-height: 1.4;
       margin: 0;
-      transform: translateY(-20px);
+      transform: translateY(-40px);
     }
 
     .buttons {
@@ -113,13 +117,6 @@
       font-size: 14px;
     }
 
-    .final-text {
-      font-size: 20px;
-      text-align: center;
-      max-width: 700px;
-      padding: 80px 60px;
-    }
-
     .match-image {
       width: 300px;
       margin-bottom: 30px;
@@ -144,8 +141,7 @@
       <h1>Toan is in trouble!<br>Release a POKEMON and rescue him!</h1>
     </div>
     <div class="pokeballs">
-      <!-- The data-type values below are in left-to-right order:
-           left = grass, middle = fire, right = water -->
+      <!-- Left = grass, middle = fire, right = water -->
       <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="grass">
       <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="fire">
       <img src="grace pokemon/pokeball closed.png" class="pokeball" data-type="water">
@@ -219,9 +215,9 @@
         await new Promise(resolve => setTimeout(resolve, 500));
         this.src = `grace pokemon/pokeball open.png`;
         await new Promise(resolve => setTimeout(resolve, 500));
-        // Now show the corresponding type image
-        this.src = `grace pokemon/${selectedType} type.png`;
-        
+        // Now show the corresponding type image with the updated filename
+        this.src = `grace pokemon/${selectedType}.png`;
+
         document.getElementById('scene2').classList.remove('active');
         document.getElementById('scene3').classList.add('active');
       });
@@ -229,7 +225,6 @@
 
     // Scene 3 Interactions (Final Confirmation)
     document.getElementById('yesBtn').addEventListener('click', function() {
-      // Match info contains the final image and final message for each type.
       const matchInfo = {
         grass: {
           image: 'grass match.png',
@@ -247,7 +242,6 @@
 
       document.getElementById('scene3').classList.remove('active');
       document.getElementById('scene4').classList.add('active');
-      // Display the final image and message immediately (no intermediate short text)
       document.getElementById('matchImage').src = `grace pokemon/${matchInfo[selectedType].image}`;
       document.getElementById('matchText').textContent = matchInfo[selectedType].final;
     });
