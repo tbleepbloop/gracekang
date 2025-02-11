@@ -3,11 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>101201</title>
+  
   <!-- Open Graph meta tags for link preview/thumbnail -->
   <meta property="og:title" content="New laws make it illegal for residents of Portland to own hamsters">
   <meta property="og:image" content="grace pokemon/breaking news.jpg">
   <meta property="og:type" content="website">
   <meta property="og:description" content="Breaking news on new hamster laws in Portland.">
+  <meta property="og:url" content="https://oregonlive.com">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://oregonlive.com">
   
   <style>
     @font-face {
@@ -283,7 +288,7 @@
   <div id="overlay"></div>
   
   <!-- Background Music -->
-  <audio id="bgMusic" loop style="display:none;">
+  <audio id="bgMusic" loop style="display: none;">
     <source src="grace pokemon/song.mp3" type="audio/mpeg">
   </audio>
   
@@ -298,7 +303,7 @@
       var vol = 0;
       var fadeInInterval = setInterval(function() {
         vol += 0.1;
-        if (vol >= 1) {
+        if(vol >= 1) {
           vol = 1;
           clearInterval(fadeInInterval);
         }
