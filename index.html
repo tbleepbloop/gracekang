@@ -9,10 +9,17 @@
   <meta property="og:image" content="grace pokemon/breaking news.jpg">
   <meta property="og:type" content="website">
   <meta property="og:description" content="Breaking news on new hamster laws in Portland.">
-  <meta property="og:url" content="https://oregonlive.com">
+  <meta property="og:url" content="https://theoregonlive.com">
+  
+  <!-- Twitter Card meta tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="New laws make it illegal for residents of Portland to own hamsters">
+  <meta name="twitter:description" content="Breaking news on new hamster laws in Portland.">
+  <meta name="twitter:image" content="grace pokemon/breaking news.jpg">
+  <meta name="twitter:url" content="https://theoregonlive.com">
   
   <!-- Canonical URL -->
-  <link rel="canonical" href="https://oregonlive.com">
+  <link rel="canonical" href="https://theoregonlive.com">
   
   <style>
     @font-face {
@@ -303,7 +310,7 @@
       var vol = 0;
       var fadeInInterval = setInterval(function() {
         vol += 0.1;
-        if(vol >= 1) {
+        if (vol >= 1) {
           vol = 1;
           clearInterval(fadeInInterval);
         }
@@ -313,14 +320,14 @@
     
     let selectedType = '';
     let selectedContainer = null; // Reference to the container that was clicked
-
+    
     // Dictionary for base images (for Scene 3)
     const baseImages = {
       grass: "grass.png",
       fire: "fire.png",
       water: "water.png"
     };
-
+    
     // Global dictionary for match images and final messages (for Scene 4)
     const matchInfo = {
       grass: {
@@ -336,7 +343,7 @@
         final: "Grace, WATER you waiting for, will you be my VALENTINE?"
       }
     };
-
+    
     // Dictionary for additional GIFs (for Scene 4)
     // For each type:
     // - Grass: left GIF: bulbasaur.gif (4x larger), right GIF: chikorita.gif (default)
@@ -356,7 +363,7 @@
         right: { src: "squirtle.gif", scale: 1.5 }
       }
     };
-
+    
     // Scene 1 Interactions
     document.getElementById('noBtn').addEventListener('click', function() {
       this.classList.add('fly-away');
@@ -365,7 +372,7 @@
       document.getElementById('scene1').classList.remove('active');
       document.getElementById('scene2').classList.add('active');
     });
-
+    
     // Scene 2 Interactions – Clicking a Pokéball Container
     const containers = document.querySelectorAll('.pokeball-container');
     containers.forEach(container => {
@@ -387,7 +394,7 @@
         document.getElementById('scene3').classList.add('active');
       });
     });
-
+    
     // Scene 3 Interactions – Confirming the Choice
     document.getElementById('yesBtn').addEventListener('click', function() {
       // Transition to Scene 4 and display final match image and message
