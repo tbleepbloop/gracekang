@@ -275,7 +275,31 @@
   </div>
   <!-- Black Overlay for Fade-In -->
   <div id="overlay"></div>
+  
+  <!-- Background Music -->
+  <audio id="bgMusic" loop style="display: none;">
+    <source src="grace pokemon/song.mp3" type="audio/mpeg">
+  </audio>
+  
   <script>
+    // Background Music Fade-In
+    window.addEventListener('load', function() {
+      var audio = document.getElementById('bgMusic');
+      audio.volume = 0;
+      audio.play().catch(function(error) {
+        console.log("Autoplay failed: " + error);
+      });
+      var vol = 0;
+      var fadeInInterval = setInterval(function() {
+        vol += 0.05;
+        if(vol >= 1) {
+          vol = 1;
+          clearInterval(fadeInInterval);
+        }
+        audio.volume = vol;
+      }, 200);
+    });
+    
     let selectedType = '';
     let selectedContainer = null; // Reference to the container that was clicked
 
@@ -303,7 +327,7 @@
     };
 
     // Dictionary for additional GIFs (for Scene 4)
-    // For each type, we now assume:
+    // For each type:
     // - Grass: left GIF: bulbasaur.gif (4x larger), right GIF: chikorita.gif (default)
     // - Fire: left GIF: torchic.gif (2x larger), right GIF: charmander.gif (default)
     // - Water: left GIF: piplup.gif (4x larger), right GIF: squirtle.gif (1.5x larger)
